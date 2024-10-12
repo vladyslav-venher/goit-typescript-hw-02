@@ -3,7 +3,12 @@ import css from './ImageModal.module.css';
 
 Modal.setAppElement('#root');
 
-const ImageModal = ({ largeImage, onClose }) => {
+type ImageModalProps = {
+  largeImage: string | null;
+  onClose: () => void;
+};
+
+const ImageModal: React.FC<ImageModalProps> = ({ largeImage, onClose }) => {
   return (
     <Modal
       isOpen={!!largeImage}
@@ -12,7 +17,11 @@ const ImageModal = ({ largeImage, onClose }) => {
       className={css.modal}
       ariaHideApp={false}
     >
-      <img src={largeImage} alt="Large version" className={css.modalImage} />
+      <img
+        src={largeImage || ''}
+        alt="Large version"
+        className={css.modalImage}
+      />
     </Modal>
   );
 };

@@ -9,15 +9,24 @@ import { fetchImages } from '../../services/api';
 import toast, { Toaster } from 'react-hot-toast';
 import css from './App.module.css';
 
+interface Image {
+  id: string;
+  urls: {
+    small: string;
+    regular: string;
+  };
+  alt_description: string;
+}
+
 export default function App() {
-  const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [error, setError] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(true);
+  const [images, setImages] = useState<Image[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [query, setQuery] = useState<string>('');
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<boolean>(true);
 
   useEffect(() => {
     if (query === '') {
@@ -27,13 +36,13 @@ export default function App() {
     async function getImages() {
       try {
         setLoading(true);
-        setError(false);
+        setError(null);
         const res = await fetchImages(query, page);
         setImages(prevImages => [...prevImages, ...res]);
         if (res.length < 10) {
           setTotalPages(false);
         }
-      } catch (error) {
+      } catch (error: any) {
         setError(error.message);
         toast.error('Failed to fetch images.');
       } finally {
@@ -44,7 +53,7 @@ export default function App() {
     getImages();
   }, [query, page]);
 
-  const handleSearchSubmit = newQuery => {
+  const handleSearchSubmit = (newQuery: string) => {
     setQuery(newQuery);
     setImages([]);
     setPage(1);
@@ -56,7 +65,7 @@ export default function App() {
     setPage(page + 1);
   };
 
-  const openModal = largeImageURL => {
+  const openModal = (largeImageURL: string) => {
     setSelectedImage(largeImageURL);
     setShowModal(true);
   };
